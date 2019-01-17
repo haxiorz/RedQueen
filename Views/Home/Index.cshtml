@@ -1,0 +1,92 @@
+﻿@model RedQueen.Models.CoinsViewModels.AllCoins
+
+@{
+    ViewData["Title"] = "Main page";
+    Layout = "~/Views/Shared/_LunaLayout.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="view-header">
+            <div class="header-title">
+                <h3 class="m-b-xs">Cryptocurrencies portfolio dashboard</h3>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="coins-summary">Total value: @Model.FormattedTotalValue</div>
+</div>
+
+<div class="row">
+    @foreach (var coin in Model.Markets)
+    {
+        <div class="col-lg-2 col-xs-6">
+            <div class="panel panel-filled">
+                <div class="panel-body">
+                    <div class="coin-name">@coin.Name</div>
+                    <h4 class="m-b-none">
+                        <img src="@string.Format("images/logos/{0}.png", coin.Name)" class="coin-logo" />
+                        <p class="coin-main-info">
+                            @coin.FormattedPrice
+                            <br /> Qty: @coin.Quantity
+                            <br /> Val: @coin.FormattedTotalValue
+                        </p>
+                    </h4>
+                    <br />
+                    <hr class="coin-separator">
+                    <div class="small">
+                        Change since last check
+                        @if (@coin.ChangeSinceLastCheck[0] == '+')
+                        {
+                            <i class="fa fa-play fa-rotate-270 text-warning"></i> @coin.ChangeSinceLastCheck
+                        }
+                        else
+                        {
+                            <i class="fa fa-play fa-rotate-90 c-white"></i> @coin.ChangeSinceLastCheck
+                        }
+                    </div>
+                    <div class="slight m-t-sm">
+                        <i class="fa fa-clock-o"> </i> Updated: <span class="c-white">@DateTime.Now</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<br />
+<br />
+
+@using (@Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "newCoinForm"}))
+{   
+<div class="row">
+    @Html.Label("Add new coin")
+    <br />
+    @Html.Label("Name")
+    <select class="selectpicker" data-live-search="true">
+        @foreach (var coinToAdd in Model.CoinsToAdd)
+        {
+            <option>@coinToAdd</option>
+        }
+    </select>
+    @Html.HiddenFor(c => c.NewCoin, new { @class = "NewCoinName" })
+    <br />
+    @Html.Label("Quantity")
+    @Html.TextBoxFor(c => c.NewCoinQt, new { @class = "form-control", style = "display: inline-block;width: 20%;margin: 6px;" })
+    <input type="submit" value="Submit" />
+</div>
+}
+
+<script>
+
+    //$('.newCoinForm').submit(function(e) {
+    //    GetCoinName();
+    //});
+
+    //function GetCoinName() {
+    //    var coinName = $('.filter-option.pull-left').text();
+    //    $('.NewCoinName').val(coinName);
+    //}
+</script>
